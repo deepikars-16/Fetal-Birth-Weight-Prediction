@@ -1,0 +1,78 @@
+Fetal Birth Weight Prediction App – Complete Setup Guide
+
+==========================
+📁 Folder Structure:
+==========================
+fetal 6.0/
+├── app.py
+├── instance/
+│   └── site.db
+├── model/
+│   ├── rf_model.pkl
+│   ├── lr_model.pkl
+│   └── columns.pkl
+├── templates/
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   └── graph.html
+
+==========================
+🔧 Required Software:
+==========================
+1. Python (v3.7 or higher)
+   → Download: https://www.python.org/downloads/
+   → During installation, check the box: ✅ "Add Python to PATH"
+
+2. Visual Studio Code (VS Code)
+   → Download: https://code.visualstudio.com/
+
+3. SQLite (for database operations)
+   ➤ Option 1: SQLite CLI
+      → Download: https://www.sqlite.org/download.html
+      → Extract and optionally add `sqlite3.exe` to system PATH
+   ➤ Option 2: DB Browser for SQLite (GUI)
+      → Download: https://sqlitebrowser.org/
+
+==========================
+📦 Required Python Libraries:
+==========================
+Open terminal inside the unzipped project folder and run:
+pip install flask flask_sqlalchemy werkzeug pandas numpy joblib
+
+==========================
+▶️ To Run the Program:
+==========================
+1. Extract the ZIP file to any directory (e.g., D:\Visual Code\fetal 6.0)
+2. Open the folder in VS Code
+3. Right-click → Open in Terminal
+4. Run: python app.py
+5. Ctrl + Click the displayed link (http://127.0.0.1:5000/)
+6. The web app will open in your default browser
+
+==========================
+🛢 To Check or Edit Database:
+==========================
+1. Open terminal in the same folder
+2. Run:
+   sqlite3 instance/site.db
+
+3. Inside SQLite prompt, you can:
+   → View all tables:
+      .tables
+
+   → View users table:
+      SELECT * FROM user;
+
+   → View prediction table:
+      SELECT * FROM prediction;
+
+   → Delete all user entries:
+      DELETE FROM user;
+
+   → Delete all prediction entries:
+      DELETE FROM prediction;
+
+==========================
+✅ You're all set to use the Fetal Birth Weight Prediction Web App!
+==========================

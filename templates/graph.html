@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #chart-container {
+            width: 700px;
+            height: 500px;
+            max-width: 100%;
+            max-height: 100%;
+            margin: auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chart-container">
+        <h2>Predicted Weight Over Time</h2>
+        <canvas id="predictionChart"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('predictionChart').getContext('2d');
+
+        const dates = JSON.parse('{{ dates | tojson | safe }}');
+        const weights = JSON.parse('{{ weights | tojson | safe }}');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Predicted Weight (kg)',
+                    data: weights,
+                    borderColor: 'blue',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 6
+                        }
+                    },
+                    // y: {
+                    //     title: {
+                    //         display: true,
+                    //         text: 'Predicted Weight (kg)'
+                    //     },
+                    //     ticks: {
+                    //         beginAtZero: false,
+                    //         suggestedMin: 1,  // Y-axis starts at 1 kg
+                    //         suggestedMax: 5   // Y-axis ends at 5 kg
+                    //     }
+                    // }
+                    // y: {
+                    //     title: {
+                    //         display: true,
+                    //         text: 'Predicted Weight (kg)'
+                    //     },
+                    //     ticks: {
+                    //         min: 1,  // Set minimum y-axis value
+                    //         max: 5,  // Set maximum y-axis value
+                    //         stepSize: 0.5 // Adjust interval between ticks
+                    //     }
+                    // }
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Predicted Weight (kg)'
+                        },
+                        beginAtZero: true,  // Ensures the y-axis starts from 0
+                        suggestedMin: 1,    // Suggests a minimum value of 1
+                        suggestedMax: 5,    // Suggests a maximum value of 5
+                        ticks: {
+                            stepSize: 0.25    // Ensures better tick spacing
+                        }
+                    }
+
+
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetal Birth Weight Prediction</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Fetal Birth Weight Prediction</h2>
+
+        {% if rf_prediction and lr_prediction %}
+        <div class="result">
+            <h3 align="center">Predicted Birth Weight</h3>
+            <p align="center"><strong>Random Forest: {{ rf_prediction }} kg</strong></p>
+            <p align="center"><strong>Linear Regression: {{ lr_prediction }} kg</strong></p>
+        </div>
+        {% endif %}
+
+        <form action="/" method="POST">
+            <div class="form-group">
+                <div>
+                    <label>Age (years):</label>
+                    <input type="number" name="Age(years)" step="any" required value="{{ request.form['Age(years)'] }}">
+                </div>
+                <div>
+                    <label>Height (cm):</label>
+                    <input type="number" name="Height(cm)" step="any" required value="{{ request.form['Height(cm)'] }}">
+                </div>
+                <div>
+                    <label>Parity:</label>
+                    <input type="number" name="Parity" step="1" required value="{{ request.form['Parity'] }}">
+                </div>
+                <div>
+                    <label>ANC:</label>
+                    <input type="number" name="ANC" step="1" required value="{{ request.form['ANC'] }}">
+                </div>
+                <div>
+                    <label>Initial Weight (kg):</label>
+                    <input type="number" name="lwt(kg)" step="any" required value="{{ request.form['lwt(kg)'] }}">
+                </div>
+                <div>
+                    <label>Final Weight (kg):</label>
+                    <input type="number" name="FWt(kg)" step="any" required value="{{ request.form['FWt(kg)'] }}">
+                </div>
+                <div>
+                    <label>Initial BP Systolic:</label>
+                    <input type="number" name="IBP_sys" step="1" required value="{{ request.form['IBP_sys'] }}">
+                </div>
+                <div>
+                    <label>Initial BP Diastolic:</label>
+                    <input type="number" name="IBP_dias" step="1" required value="{{ request.form['IBP_dias'] }}">
+                </div>
+                <div>
+                    <label>Final BP Systolic:</label>
+                    <input type="number" name="FBP_sys" step="1" required value="{{ request.form['FBP_sys'] }}">
+                </div>
+                <div>
+                    <label>Final BP Diastolic:</label>
+                    <input type="number" name="FBP_dias" step="1" required value="{{ request.form['FBP_dias'] }}">
+                </div>
+                <div>
+                    <label>Initial Hemoglobin (gm%):</label>
+                    <input type="number" name="IHb(gm%)" step="any" required value="{{ request.form['IHb(gm%)'] }}">
+                </div>
+                <div>
+                    <label>Final Hemoglobin (gm%):</label>
+                    <input type="number" name="FHb(gm%)" step="any" required value="{{ request.form['FHb(gm%)'] }}">
+                </div>
+                <div>
+                    <label>Blood Sugar (RBS):</label>
+                    <input type="number" name="BS(RBS)" step="any" required value="{{ request.form['BS(RBS)'] }}">
+                </div>
+                <div>
+                    <label>LNH:</label>
+                    <input type="number" name="LNH" step="1" required value="{{ request.form['LNH'] }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <label>Blood Group:</label>
+                    <select name="Bgroup" required>
+                        <option value="A+" {% if request.form['Bgroup']=="A+" %} selected {% endif %}>A+</option>
+                        <option value="A-" {% if request.form['Bgroup']=="A-" %} selected {% endif %}>A-</option>
+                        <option value="B+" {% if request.form['Bgroup']=="B+" %} selected {% endif %}>B+</option>
+                        <option value="B-" {% if request.form['Bgroup']=="B-" %} selected {% endif %}>B-</option>
+                        <option value="AB+" {% if request.form['Bgroup']=="AB+" %} selected {% endif %}>AB+</option>
+                        <option value="AB-" {% if request.form['Bgroup']=="AB-" %} selected {% endif %}>AB-</option>
+                        <option value="O+" {% if request.form['Bgroup']=="O+" %} selected {% endif %}>O+</option>
+                        <option value="O-" {% if request.form['Bgroup']=="O-" %} selected {% endif %}>O-</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Term/Preterm:</label>
+                    <select name="Term/Preterm" required>
+                        <option value="Term" {% if request.form['Term/Preterm']=="Term" %} selected {% endif %}>Term</option>
+                        <option value="Preterm" {% if request.form['Term/Preterm']=="Preterm" %} selected {% endif %}>Preterm</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Date:</label>
+                    <input type="date" name="date" required value="{{ request.form['date'] }}">
+                </div>
+            </div>
+
+            <div class="new">
+                <input type="submit" value="Predict Birth Weight">
+                <button type="button" class="refresh" onclick="window.location.href=window.location.pathname;">Refresh</button>
+                <a href="{{ url_for('show_graph') }}" class="graph-link">
+                    Show Graph
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
