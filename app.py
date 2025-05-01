@@ -6,6 +6,7 @@ import pandas as pd
 import joblib
 import os
 from datetime import datetime
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -167,6 +168,61 @@ def show_graph():
     weights = [p.predicted_weight for p in user_predictions]
 
     return render_template("graph.html", dates=dates, weights=weights)
+
+# ✅ Evaluation Route
+@app.route("/evaluate")
+def evaluate():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    # Load test data from Data_Preprocess folder
+    test_file_path = os.path.join("Data_Preprocess", "test_data.csv")
+    test_data = pd.read_csv(test_file_path)
+
+    # Define target column
+    target_col = "BWt(kg)"
+
+    # Split features and target
+    X_test = test_data.drop(columns=[target_col])
+    y_test = test_data[target_col]
+
+    # One-hot encode categorical features (consistent with training)
+    X_test = pd.get_dummies(X_test, drop_first=True)
+
+    # Ensure test data has the same columns as training data
+    X_test = X_test.reindex(columns=columns, fill_value=0)
+
+    # Scale features
+    X_test_scaled = scaler.transform(X_test)
+
+    # Generate predictions
+    y_pred_rf = model.predict(X_test_scaled)
+    y_pred_lr = lr_model.predict(X_test_scaled)
+
+    # Add predictions to the DataFrame
+    test_data['BWt RF'] = y_pred_rf
+    test_data['BWt LR'] = y_pred_lr
+
+    # Save the updated DataFrame back to test_data.csv
+    test_data.to_csv(test_file_path, index=False)
+
+    # Calculate metrics
+    lr_metrics = {
+        "MAE": mean_absolute_error(y_test, y_pred_lr),
+        "RMSE": np.sqrt(mean_squared_error(y_test, y_pred_lr)),
+        "R2": r2_score(y_test, y_pred_lr)
+    }
+
+    rf_metrics = {
+        "MAE": mean_absolute_error(y_test, y_pred_rf),
+        "RMSE": np.sqrt(mean_squared_error(y_test, y_pred_rf)),
+        "R2": r2_score(y_test, y_pred_rf)
+    }
+
+    # Determine better model based on R²
+    better_model = "Random Forest" if rf_metrics["R2"] > lr_metrics["R2"] else "Linear Regression"
+
+    return render_template("evaluate.html", lr_metrics=lr_metrics, rf_metrics=rf_metrics, better_model=better_model)
 
 if __name__ == "__main__":
     app.run(debug=True)

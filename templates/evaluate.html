@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Accuracy Comparison</title>
+    <!-- Replace Flask URL with direct path -->
+    <link rel="stylesheet" href="../static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e6e6fa; /* Lavender fallback color */
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #4B0082; /* Indigo for headings */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-top: 0;
+        }
+        h2 {
+            font-size: 1.8em;
+        }
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #6A5ACD; /* SlateBlue for buttons */
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .nav-links a:hover {
+            background-color: #483D8B; /* DarkSlateBlue on hover */
+        }
+        table {
+            width: 60%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            width: 400px;
+            height: 300px;
+            margin: 20px auto;
+        }
+        .conclusion {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1.3em;
+            padding: 15px;
+            background-color: #E0FFFF; /* LightCyan background for highlight */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .conclusion strong {
+            color: #FF4500; /* OrangeRed for the model name */
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Model Accuracy: Random Forest vs Linear Regression</h1>
+
+        <div class="nav-links">
+            <a href="predict.html">Back to Prediction</a>
+            <a href="graph.html">View Prediction Graph</a>
+            <a href="index.html">Logout</a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>MAE (kg)</th>
+                    <th>RMSE (kg)</th>
+                    <th>R²</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Linear Regression</td>
+                    <td>0.4823</td>
+                    <td>0.6358</td>
+                    <td>0.7245</td>
+                </tr>
+                <tr>
+                    <td>Random Forest</td>
+                    <td>0.3965</td>
+                    <td>0.5213</td>
+                    <td>0.8123</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Comparison Graph</h2>
+        <div class="chart-container">
+            <canvas id="metricsChart"></canvas>
+        </div>
+
+        <div class="conclusion">
+            <h2>Conclusion</h2>
+            <p>The <strong>Random Forest</strong> model performs better based on the R² score.</p>
+        </div>
+    </div>
+
+    <script>
+        // Hardcoded values for testing
+        const lrData = [0.4823, 0.6358, 0.7245];
+        const rfData = [0.3965, 0.5213, 0.8123];
+
+        const ctx = document.getElementById('metricsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['MAE (kg)', 'RMSE (kg)', 'R²'],
+                datasets: [
+                    {
+                        label: 'Linear Regression',
+                        data: lrData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)', // Red shade
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Random Forest',
+                        data: rfData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)', // Blue shade
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Metric'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
